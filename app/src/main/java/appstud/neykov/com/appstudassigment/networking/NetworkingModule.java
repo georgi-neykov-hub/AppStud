@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.res.Resources;
 
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.LocationServices;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
@@ -14,11 +17,15 @@ import javax.inject.Singleton;
 
 import appstud.neykov.com.appstudassigment.BuildConfig;
 import appstud.neykov.com.appstudassigment.R;
+import appstud.neykov.com.appstudassigment.networking.places.GoogleApisToken;
+import appstud.neykov.com.appstudassigment.networking.places.Place;
 import appstud.neykov.com.appstudassigment.util.Global;
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * @author Georgi
@@ -28,12 +35,30 @@ import okhttp3.OkHttpClient;
 public class NetworkingModule {
 
     @Provides
+    @GoogleApisToken
+    public String provideGoogleApisToken(@Global Context context){
+        return context.getString(R.string.config_google_apis_key);
+    }
+
+    @Provides
     @Singleton
-    public GoogleApiClient provideApiClient(@Global Context context){
+    GoogleApiClient provideGoogleApiClient(@Global Context context) {
         return new GoogleApiClient.Builder(context)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
+                .addApi(LocationServices.API)
                 .build();
+    }
+
+    @Provides
+    @Singleton
+    GooglePlacesApi provideAPI( OkHttpClient okHttpClient, Gson gson) {
+        final String endpointUrl = "https://maps.googleapis.com/maps/api/place/";
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(endpointUrl)
+                .client(okHttpClient)
+                .validateEagerly(BuildConfig.DEBUG)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        return retrofit.create(GooglePlacesApi.class);
     }
 
     @Provides
@@ -61,5 +86,16 @@ public class NetworkingModule {
                 .writeTimeout(writeTimeoutMs, TimeUnit.MILLISECONDS)
                 .retryOnConnectionFailure(true)
                 .build();
+    }
+
+    @Provides
+    @Singleton
+    Gson provideGson() {
+        return new GsonBuilder()
+                .setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
+                .excludeFieldsWithoutExposeAnnotation()
+                .registerTypeAdapter(Place.class, new Place.Deserializer())
+                // Add other custom serializers/deserializers here
+                .create();
     }
 }

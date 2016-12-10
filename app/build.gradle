@@ -75,12 +75,15 @@ dependencies {
 
     // Google Play APIs
     compile "com.google.android.gms:play-services-maps:${playServicesVersion}"
-    compile "com.google.android.gms:play-services-places:${playServicesVersion}"
+    compile "com.google.android.gms:play-services-location:${playServicesVersion}"
 
     // Network Stack dependencies
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.2'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.google.code.gson:gson:2.6.2'
 
     // Test dependencies
     testCompile 'junit:junit:4.12'
