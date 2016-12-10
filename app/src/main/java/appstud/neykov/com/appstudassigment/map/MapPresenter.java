@@ -12,10 +12,6 @@ import appstud.neykov.com.appstudassigment.networking.places.Location;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-/**
- * Created by Georgi on 12/10/2016.
- */
-
 public class MapPresenter extends RxPresenter<MapView> {
     private static final int SEARCH_RADIUS_METERS = 2000;
 

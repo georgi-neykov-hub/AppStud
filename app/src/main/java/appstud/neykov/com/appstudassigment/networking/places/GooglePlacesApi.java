@@ -1,4 +1,4 @@
-package appstud.neykov.com.appstudassigment.networking;
+package appstud.neykov.com.appstudassigment.networking.places;
 
 import appstud.neykov.com.appstudassigment.networking.places.Location;
 import appstud.neykov.com.appstudassigment.networking.places.PlacesSearchResponse;

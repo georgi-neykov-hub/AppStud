@@ -7,10 +7,6 @@ import appstud.neykov.com.appstudassigment.util.ApplicationModule;
 import appstud.neykov.com.appstudassigment.util.components.ComponentInstanceHolder;
 import appstud.neykov.com.appstudassigment.util.components.ComponentProvider;
 
-/**
- * Created by Georgi on 12/10/2016.
- */
-
 public class TestApplication extends Application implements ComponentProvider {
 
     private ComponentInstanceHolder<AppComponent> appComponentHolder = new AppComponentHolder(this);

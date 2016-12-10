@@ -18,6 +18,7 @@ import javax.inject.Singleton;
 import appstud.neykov.com.appstudassigment.BuildConfig;
 import appstud.neykov.com.appstudassigment.R;
 import appstud.neykov.com.appstudassigment.networking.places.GoogleApisToken;
+import appstud.neykov.com.appstudassigment.networking.places.GooglePlacesApi;
 import appstud.neykov.com.appstudassigment.networking.places.Place;
 import appstud.neykov.com.appstudassigment.util.Global;
 import dagger.Module;
@@ -50,7 +51,7 @@ public class NetworkingModule {
 
     @Provides
     @Singleton
-    GooglePlacesApi provideAPI( OkHttpClient okHttpClient, Gson gson) {
+    GooglePlacesApi provideAPI(OkHttpClient okHttpClient, Gson gson) {
         final String endpointUrl = "https://maps.googleapis.com/maps/api/place/";
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(endpointUrl)

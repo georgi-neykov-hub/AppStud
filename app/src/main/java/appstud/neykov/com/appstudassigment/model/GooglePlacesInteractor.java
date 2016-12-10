@@ -9,7 +9,7 @@ import java.io.InputStream;
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-import appstud.neykov.com.appstudassigment.networking.GooglePlacesApi;
+import appstud.neykov.com.appstudassigment.networking.places.GooglePlacesApi;
 import appstud.neykov.com.appstudassigment.networking.HttpException;
 import appstud.neykov.com.appstudassigment.networking.places.GoogleApisToken;
 import appstud.neykov.com.appstudassigment.networking.places.Location;

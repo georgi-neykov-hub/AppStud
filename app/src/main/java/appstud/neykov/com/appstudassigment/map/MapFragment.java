@@ -13,8 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CircleOptions;
@@ -35,26 +33,20 @@ import appstud.neykov.com.appstudassigment.util.components.ComponentDelegate;
 
 public class MapFragment extends Fragment implements ViewWithPresenter<MapPresenter>, MapView {
 
-    public static final String TAG_MAPS_FRAGMENT = "MapFragment.TAG_MAPS_FRAGMENT";
-    private static final int PERMISSION_REQUEST_CODE = 933;/**/
+    private static final String TAG_MAPS_FRAGMENT = "MapFragment.TAG_MAPS_FRAGMENT";
+    private static final int PERMISSION_REQUEST_CODE = 933;
 
     public static MapFragment newInstance() {
-
-        Bundle args = new Bundle();
-
-        MapFragment fragment = new MapFragment();
-        fragment.setArguments(args);
-        return fragment;
+        return new MapFragment();
     }
 
     @Inject
     Provider<MapPresenter> presenterProvider;
-
     private SupportPresenterLifecycleDelegate<MapPresenter> presenterLifecycleDelegate;
     private SupportMapFragment googleMapsFragment;
     private GoogleMap googleMap;
 
-    private GoogleApiClient apiClient;
+    private boolean locationPermissionGranted;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,8 +60,6 @@ public class MapFragment extends Fragment implements ViewWithPresenter<MapPresen
                     .add(R.id.mapContainer, googleMapsFragment, TAG_MAPS_FRAGMENT)
                     .commit();
         }
-
-        googleMapsFragment.getMapAsync(this::onGoogleMapAvailable);
 
         new ComponentDelegate<>(getContext(), AppComponent.class)
                 .component()
@@ -106,6 +96,47 @@ public class MapFragment extends Fragment implements ViewWithPresenter<MapPresen
     }
 
     @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        googleMapsFragment.getMapAsync(this::onGoogleMapAvailable);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        googleMap = null;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (ContextCompat.checkSelfPermission(
+                getContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            onLocationPermissionGranted();
+        } else {
+            boolean rationaleNeeded = ActivityCompat.shouldShowRequestPermissionRationale(
+                    getActivity(),
+                    Manifest.permission.ACCESS_FINE_LOCATION);
+            onLocationPermissionDenied(rationaleNeeded);
+            if (!rationaleNeeded) {
+                requestReadContactsPermission();
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                onLocationPermissionGranted();
+            } else {
+                onLocationPermissionDenied(true);
+            }
+        }
+    }
+
+    @Override
     public void displayPlaces(@NonNull List<Place> places) {
         googleMap.clear();
         for (Place place : places) {
@@ -130,24 +161,6 @@ public class MapFragment extends Fragment implements ViewWithPresenter<MapPresen
         return presenterLifecycleDelegate.getPresenter();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (ContextCompat.checkSelfPermission(
-                getContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            onLocationPermissionGranted();
-        } else {
-            boolean rationaleNeeded = ActivityCompat.shouldShowRequestPermissionRationale(
-                    getActivity(),
-                    Manifest.permission.ACCESS_FINE_LOCATION);
-            onLocationPermissionDenied(rationaleNeeded);
-            if (!rationaleNeeded) {
-                requestReadContactsPermission();
-            }
-        }
-    }
-
     protected final void requestReadContactsPermission() {
         requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_CODE);
     }
@@ -157,25 +170,14 @@ public class MapFragment extends Fragment implements ViewWithPresenter<MapPresen
         presenterLifecycleDelegate.onResume(this);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                onLocationPermissionGranted();
-            } else {
-                onLocationPermissionDenied(true);
-            }
-        }
-    }
-
-    private boolean locationPermissionGranted;
-
     protected void onLocationPermissionGranted(){
         locationPermissionGranted = true;
         if (googleMap != null) {
             //noinspection MissingPermission
             googleMap.setMyLocationEnabled(true);
         }
+
+        // TODO: Request the current fine/coarse location and use Places API.
     }
 
     protected void onLocationPermissionDenied(boolean showRationale){
@@ -184,5 +186,7 @@ public class MapFragment extends Fragment implements ViewWithPresenter<MapPresen
             //noinspection MissingPermission
             googleMap.setMyLocationEnabled(false);
         }
+
+        //TODO: Add a message/rationale why permission is needed.
     }
 }
