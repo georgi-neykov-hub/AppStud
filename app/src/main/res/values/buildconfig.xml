@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="config_httpReadTimeoutMs">5000</integer>
+    <integer name="config_httpWriteTimeoutMs">5000</integer>
+    <integer name="config_httpConnectTimeoutMs">5000</integer>
+    <integer name="config_httpCacheSizeMb">50</integer>
+    <string name="config_ApiEndpointUrl" translatable="false">http://</string>
+
+    <integer name="config_logLevel">@integer/config_logLevel_verbose</integer>
+    <integer name="config_logLevel_none">0</integer>
+    <integer name="config_logLevel_info">3</integer>
+    <integer name="config_logLevel_verbose">5</integer>
+
+    <string name="config_google_apis_key">AIzaSyAWgLbgVvFKkwU7WkWSP2q-6m15T6Ozvhw</string>
+</resources>
