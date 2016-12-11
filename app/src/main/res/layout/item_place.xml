@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        app:layout_widthPercent="100%"
+        app:layout_aspectRatio="178%"
+        android:id="@+id/photo"
+        tools:src="#abc"
+        android:background="@color/marker_image_fill_color"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:paddingLeft="@dimen/rhythm_space_double"
+        android:paddingRight="@dimen/rhythm_space_double"
+        android:paddingTop="@dimen/rhythm_space_single"
+        android:paddingBottom="@dimen/rhythm_space_single"
+        android:background="#5999">
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            tools:text="Bar Something"/>
+
+    </FrameLayout>
+
+</android.support.percent.PercentFrameLayout>
