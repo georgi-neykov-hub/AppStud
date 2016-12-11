@@ -17,9 +17,10 @@ import javax.inject.Singleton;
 
 import appstud.neykov.com.appstudassigment.BuildConfig;
 import appstud.neykov.com.appstudassigment.R;
-import appstud.neykov.com.appstudassigment.networking.places.GoogleApisToken;
+import appstud.neykov.com.appstudassigment.model.GooglePlacesRequestTransformer;
+import appstud.neykov.com.appstudassigment.model.Place;
+import appstud.neykov.com.appstudassigment.networking.places.GoogleApisKey;
 import appstud.neykov.com.appstudassigment.networking.places.GooglePlacesApi;
-import appstud.neykov.com.appstudassigment.networking.places.Place;
 import appstud.neykov.com.appstudassigment.util.Global;
 import dagger.Module;
 import dagger.Provides;
@@ -36,7 +37,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class NetworkingModule {
 
     @Provides
-    @GoogleApisToken
+    @GoogleApisKey
     public String provideGoogleApisToken(@Global Context context){
         return context.getString(R.string.config_google_apis_key);
     }
@@ -64,10 +65,11 @@ public class NetworkingModule {
 
     @Provides
     @Singleton
-    Picasso providePicasso(@Global Context context, OkHttpClient httpClient) {
+    Picasso providePicasso(@Global Context context, OkHttpClient httpClient, @GoogleApisKey String googlePlacesKey) {
         return new Picasso.Builder(context)
                 .loggingEnabled(BuildConfig.DEBUG)
                 .downloader(new OkHttp3Downloader(httpClient))
+                .requestTransformer(new GooglePlacesRequestTransformer(googlePlacesKey))
                 .build();
     }
 

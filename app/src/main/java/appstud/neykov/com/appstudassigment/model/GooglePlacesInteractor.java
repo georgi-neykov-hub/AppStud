@@ -4,24 +4,17 @@ package appstud.neykov.com.appstudassigment.model;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.os.HandlerThread;
 import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.support.annotation.WorkerThread;
 import android.support.v4.content.ContextCompat;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationAvailability;
 import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -29,19 +22,13 @@ import javax.inject.Provider;
 
 import appstud.neykov.com.appstudassigment.networking.places.GooglePlacesApi;
 import appstud.neykov.com.appstudassigment.networking.HttpException;
-import appstud.neykov.com.appstudassigment.networking.places.GoogleApisToken;
-import appstud.neykov.com.appstudassigment.networking.places.Location;
-import appstud.neykov.com.appstudassigment.networking.places.Place;
+import appstud.neykov.com.appstudassigment.networking.places.GoogleApisKey;
 import appstud.neykov.com.appstudassigment.networking.places.PlacesApiException;
 import appstud.neykov.com.appstudassigment.networking.places.PlacesSearchResponse;
 import appstud.neykov.com.appstudassigment.networking.places.Status;
 import appstud.neykov.com.appstudassigment.util.Global;
-import okhttp3.ResponseBody;
 import retrofit2.Response;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.internal.util.RxThreadFactory;
-import rx.plugins.RxJavaSchedulersHook;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.Subscriptions;
 
@@ -57,7 +44,7 @@ public class GooglePlacesInteractor {
     private String googleApiKey;
 
     @Inject
-    public GooglePlacesInteractor(@Global Context context, Provider<GooglePlacesApi> apiProvider, @GoogleApisToken String googleApiKey) {
+    public GooglePlacesInteractor(@Global Context context, Provider<GooglePlacesApi> apiProvider, @GoogleApisKey String googleApiKey) {
         this.context = context;
         this.apiProvider = apiProvider;
         this.googleApiKey = googleApiKey;
@@ -134,18 +121,6 @@ public class GooglePlacesInteractor {
                 googleApiClient.disconnect();
             }
         }).subscribeOn(Schedulers.io());
-    }
-
-    @WorkerThread
-    public InputStream getPlacesPhoto(String photoReference, int desiredWidth, int desiredHeight) throws IOException, HttpException {
-        Response<ResponseBody> response = apiProvider.get()
-                .getPhoto(googleApiKey, photoReference, desiredWidth, desiredHeight)
-                .execute();
-        if (response.isSuccessful()) {
-            return response.body().byteStream();
-        } else {
-            throw new HttpException(response.code(), response.message());
-        }
     }
 
     private boolean locationPermissionGranted(){
