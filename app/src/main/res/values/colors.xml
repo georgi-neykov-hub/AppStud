@@ -3,6 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="windowBackground">#FFF</color>
 
     <color name="marker_image_fill_color">#999</color>
     <color name="marker_image_stroke_color">#000</color>
