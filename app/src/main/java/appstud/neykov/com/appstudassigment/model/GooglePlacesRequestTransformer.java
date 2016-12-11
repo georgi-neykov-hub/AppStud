@@ -22,7 +22,7 @@ public class GooglePlacesRequestTransformer implements Picasso.RequestTransforme
     @Override
     public Request transformRequest(Request request) {
 
-        if (PlacesImagingContract.isPlacesPhotoUri(request.uri)) {
+        if (request.uri != null && PlacesImagingContract.isPlacesPhotoUri(request.uri)) {
             Uri photoUri = request.uri;
             String photoReference = getReference(photoUri);
             int maxHeight = getMaxHeight(photoUri);

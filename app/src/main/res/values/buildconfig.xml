@@ -2,7 +2,7 @@
 <resources>
     <integer name="config_httpReadTimeoutMs">5000</integer>
     <integer name="config_httpWriteTimeoutMs">5000</integer>
-    <integer name="config_httpConnectTimeoutMs">5000</integer>
+    <integer name="config_httpConnectTimeoutMs">30000</integer>
     <integer name="config_httpCacheSizeMb">50</integer>
     <string name="config_ApiEndpointUrl" translatable="false">http://</string>
 

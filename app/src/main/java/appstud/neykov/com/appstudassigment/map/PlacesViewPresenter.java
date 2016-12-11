@@ -17,14 +17,14 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class MapPresenter extends RxPresenter<MapView> {
+public class PlacesViewPresenter extends RxPresenter<PlacesView> {
     private static final int SEARCH_RADIUS_METERS = 2000;
 
     private GooglePlacesInteractor googlePlacesInteractor;
     private Subscription locationTrackingSubscription;
 
     @Inject
-    public MapPresenter(GooglePlacesInteractor googlePlacesInteractor) {
+    public PlacesViewPresenter(GooglePlacesInteractor googlePlacesInteractor) {
         this.googlePlacesInteractor = googlePlacesInteractor;
     }
 
@@ -45,10 +45,10 @@ public class MapPresenter extends RxPresenter<MapView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .compose(deliverLatest())
                 .subscribe(delivery -> delivery.split(
-                        MapView::displayLocation,
+                        PlacesView::displayLocation,
                         (mapView, throwable) -> {
                             stopTrackingLocation();
-                            mapView.showError(MapView.ERROR_LOCATION_UPDATES_UNAVAILABLE, Bundle.EMPTY);
+                            mapView.showError(PlacesView.ERROR_LOCATION_UPDATES_UNAVAILABLE, Bundle.EMPTY);
                         }));
     }
 
@@ -70,7 +70,7 @@ public class MapPresenter extends RxPresenter<MapView> {
                 .subscribe(delivery -> {
                     delivery.split(
                             (mapView, places) -> mapView.displayNearbyPlaces(location, places),
-                            (mapView, throwable) -> mapView.showError(MapView.ERROR_LOADING_PLACES, Bundle.EMPTY));
+                            (mapView, throwable) -> mapView.showError(PlacesView.ERROR_LOADING_PLACES, Bundle.EMPTY));
                 }));
     }
 }

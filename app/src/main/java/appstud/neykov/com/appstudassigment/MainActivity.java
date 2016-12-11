@@ -3,7 +3,8 @@ package appstud.neykov.com.appstudassigment;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import appstud.neykov.com.appstudassigment.map.MapFragment;
+import appstud.neykov.com.appstudassigment.map.PlacesFragment;
+import appstud.neykov.com.appstudassigment.map.PlacesMapFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -14,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.contentContainer, MapFragment.newInstance())
+                    .add(R.id.contentContainer, PlacesFragment.newInstance())
                     .commit();
         }
     }

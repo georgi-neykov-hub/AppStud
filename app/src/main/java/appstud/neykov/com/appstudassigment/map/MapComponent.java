@@ -8,6 +8,7 @@ import dagger.Subcomponent;
 
 @Subcomponent
 public interface MapComponent {
-    void inject(MapFragment fragment);
+    void inject(PlacesMapFragment fragment);
     void inject(PlacesListFragment fragment);
+    void inject(PlacesFragment fragment);
 }

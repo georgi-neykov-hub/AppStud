@@ -55,11 +55,13 @@ public class MarkerImageLoader {
     }
 
     public void displayPlaceWithoutImage(GoogleMap map, LatLng position) {
-        MarkerOptions markerOptions = new MarkerOptions()
-                .draggable(false)
-                .position(position)
-                .icon(BitmapDescriptorFactory.defaultMarker());
-        map.addMarker(markerOptions);
+        picasso.load(R.drawable.ic_bottle)
+                .tag(markerImageTag)
+                .resizeDimen(R.dimen.map_place_image_diameter, R.dimen.map_place_image_diameter)
+                .centerCrop()
+                .error(R.drawable.marker)
+                .transform(transformationBuilder.build())
+                .into(new MarkerLoadTarget(map, position));
     }
 
     private void displayPlaceWithImage(GoogleMap map, Bitmap bitmap, LatLng position) {
@@ -75,7 +77,6 @@ public class MarkerImageLoader {
                 .tag(markerImageTag)
                 .resizeDimen(R.dimen.map_place_image_diameter, R.dimen.map_place_image_diameter)
                 .centerCrop()
-                .error(R.drawable.marker)
                 .transform(transformationBuilder.build())
                 .into(new MarkerLoadTarget(map, position));
     }
