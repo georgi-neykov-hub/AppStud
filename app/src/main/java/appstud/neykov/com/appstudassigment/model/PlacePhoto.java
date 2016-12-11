@@ -1,4 +1,4 @@
-package appstud.neykov.com.appstudassigment.networking.places;
+package appstud.neykov.com.appstudassigment.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

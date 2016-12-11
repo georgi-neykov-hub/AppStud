@@ -6,6 +6,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Collections;
 import java.util.List;
 
+import appstud.neykov.com.appstudassigment.model.Place;
+
 /**
  * Created by Georgi on 12/10/2016.
  */

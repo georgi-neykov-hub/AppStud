@@ -5,8 +5,8 @@ import android.support.annotation.NonNull;
 import java.util.List;
 
 import appstud.neykov.com.appstudassigment.base.ErrorDisplayView;
-import appstud.neykov.com.appstudassigment.networking.places.Location;
-import appstud.neykov.com.appstudassigment.networking.places.Place;
+import appstud.neykov.com.appstudassigment.model.Location;
+import appstud.neykov.com.appstudassigment.model.Place;
 
 public interface MapView extends ErrorDisplayView{
 

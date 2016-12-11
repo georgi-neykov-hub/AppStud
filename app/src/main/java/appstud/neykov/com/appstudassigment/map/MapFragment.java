@@ -19,7 +19,6 @@ import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.neykov.mvp.SupportPresenterLifecycleDelegate;
 import com.neykov.mvp.ViewWithPresenter;
 
@@ -30,8 +29,8 @@ import javax.inject.Provider;
 
 import appstud.neykov.com.appstudassigment.AppComponent;
 import appstud.neykov.com.appstudassigment.R;
-import appstud.neykov.com.appstudassigment.networking.places.Location;
-import appstud.neykov.com.appstudassigment.networking.places.Place;
+import appstud.neykov.com.appstudassigment.model.Location;
+import appstud.neykov.com.appstudassigment.model.Place;
 import appstud.neykov.com.appstudassigment.util.components.ComponentDelegate;
 
 public class MapFragment extends Fragment implements ViewWithPresenter<MapPresenter>, MapView {
@@ -45,6 +44,9 @@ public class MapFragment extends Fragment implements ViewWithPresenter<MapPresen
 
     @Inject
     Provider<MapPresenter> presenterProvider;
+    @Inject
+    MarkerImageLoader markerImageLoader;
+
     private SupportPresenterLifecycleDelegate<MapPresenter> presenterLifecycleDelegate;
     private SupportMapFragment googleMapsFragment;
     private GoogleMap googleMap;
@@ -69,6 +71,11 @@ public class MapFragment extends Fragment implements ViewWithPresenter<MapPresen
                 .inject(this);
 
         locationSourceAdapter = new LocationSourceAdapter();
+
+        int strokeColor = ContextCompat.getColor(getContext(), R.color.marker_image_stroke_color);
+        int markerStrokeWidth = getContext().getResources().getDimensionPixelSize(R.dimen.map_place_image_stroke);
+        markerImageLoader.setMarkerBorderColor(strokeColor);
+        markerImageLoader.setMarkerBorderWidthPixels(markerStrokeWidth);
     }
 
     @Override
@@ -112,6 +119,7 @@ public class MapFragment extends Fragment implements ViewWithPresenter<MapPresen
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        markerImageLoader.cancelImageLoadRequests();
         googleMap = null;
     }
 
@@ -159,20 +167,22 @@ public class MapFragment extends Fragment implements ViewWithPresenter<MapPresen
 
     @Override
     public void displayNearbyPlaces(@NonNull Location location, @NonNull List<Place> places) {
+        markerImageLoader.cancelImageLoadRequests();
         googleMap.clear();
         LatLngBounds.Builder boundsBuilder = LatLngBounds.builder();
         for (Place place : places) {
             Location placeLocation = place.location();
             LatLng latLng = new LatLng(placeLocation.latitude(), placeLocation.longtidude());
-            MarkerOptions markerOptions = new MarkerOptions()
-                    .draggable(false)
-                    .position(latLng)
-                    .title(place.name());
-            googleMap.addMarker(markerOptions);
+            if (!place.photos().isEmpty()) {
+                markerImageLoader.loadPlaceImage(googleMap, place.photos().get(0), latLng);
+            } else {
+                markerImageLoader.displayPlaceWithoutImage(googleMap, latLng);
+            }
             boundsBuilder.include(latLng);
         }
 
-        CameraUpdate boundsUpdate = CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 64);
+        int paddingPixes = getContext().getResources().getDimensionPixelSize(R.dimen.map_place_image_diameter);
+        CameraUpdate boundsUpdate = CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), paddingPixes);
         googleMap.stopAnimation();
         googleMap.animateCamera(boundsUpdate);
     }

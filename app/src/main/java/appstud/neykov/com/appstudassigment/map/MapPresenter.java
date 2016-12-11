@@ -12,7 +12,7 @@ import javax.inject.Inject;
 
 import appstud.neykov.com.appstudassigment.model.GooglePlacesInteractor;
 import appstud.neykov.com.appstudassigment.model.PlaceType;
-import appstud.neykov.com.appstudassigment.networking.places.Location;
+import appstud.neykov.com.appstudassigment.model.Location;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;

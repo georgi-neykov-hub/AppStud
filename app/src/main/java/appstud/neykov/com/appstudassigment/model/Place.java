@@ -1,4 +1,4 @@
-package appstud.neykov.com.appstudassigment.networking.places;
+package appstud.neykov.com.appstudassigment.model;
 
 import android.support.annotation.NonNull;
 

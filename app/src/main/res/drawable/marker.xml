@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <size
+        android:width="@dimen/map_place_image_diameter"
+        android:height="@dimen/map_place_image_diameter" />
+    <solid android:color="@color/marker_image_fill_color" />
+    <stroke
+        android:width="@dimen/map_place_image_stroke"
+        android:color="@color/marker_image_stroke_color" />
+</shape>
