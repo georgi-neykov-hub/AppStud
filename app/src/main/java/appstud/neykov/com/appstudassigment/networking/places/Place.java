@@ -66,16 +66,20 @@ public class Place {
 
     public static class Deserializer implements JsonDeserializer<Place> {
 
-
         @Override
         public Place deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jsonObject = json.getAsJsonObject();
             try {
                 Location location = context.deserialize(jsonObject.getAsJsonObject("geometry").get("location"), Location.class);
+                List<PlacePhoto> photos;
                 JsonArray photosJson = jsonObject.getAsJsonArray("photos");
-                List<PlacePhoto> photos = photosJson.size() > 0 ? new ArrayList<>(photosJson.size()) : Collections.emptyList();
-                for (JsonElement element : photosJson) {
-                    photos.add(context.deserialize(element, PlacePhoto.class));
+                if (photosJson != null && photosJson.size() > 0) {
+                    photos = new ArrayList<>(photosJson.size());
+                    for (JsonElement element : photosJson) {
+                        photos.add(context.deserialize(element, PlacePhoto.class));
+                    }
+                } else {
+                    photos = Collections.emptyList();
                 }
 
                 return new Place(jsonObject.get("place_id").getAsString(),

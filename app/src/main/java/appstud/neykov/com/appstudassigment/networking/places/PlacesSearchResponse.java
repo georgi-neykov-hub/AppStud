@@ -13,7 +13,7 @@ import java.util.List;
 public class PlacesSearchResponse {
 
     @Expose
-    @SerializedName("results")
+    @SerializedName("status")
     private Status status;
 
     @Expose
